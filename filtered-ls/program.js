@@ -13,3 +13,4 @@ fs.readdir(dir, function (err, list) {
 			console.log(el);
 		}
 	});
+});
