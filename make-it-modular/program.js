@@ -6,18 +6,19 @@
 var fs = require('fs');
 var path = require('path');
 
-function modularFileFiltering() {
-	var dir = process.argv[2];
-	var ext = '.' + process.argv[3];
+function modularFileFiltering(dir, ext, callback) {
 
 	fs.readdir(dir, function (err, list) {
-		if (err) throw err;
+		var matches = [];
+		if (err) return callback(err);
 		list.forEach(function (el, i) {
 			if (path.extname(el) === ext) {
-				console.log(el);
+				matches.push(el);
 			}
 		});
+		callback(null, matches); // pass null as error
 	});
+
 }
 
 module.exports = modularFileFiltering;
