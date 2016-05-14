@@ -20,7 +20,6 @@ function returnUrlData (url) {
 			});
 		}).on('error', console.error);
 	});
-
 }
 
 returnUrlData(url1)
