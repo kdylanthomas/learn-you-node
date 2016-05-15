@@ -1,13 +1,8 @@
 var net = require('net');
 
 net.createServer(function (socket) {
-	var date = new Date();
-	var YYYY = date.getFullYear();
-	var MM = leftPad(date.getMonth() + 1);
-	var DD = leftPad(date.getDate());
-	var hh = leftPad(date.getHours());
-	var mm = leftPad(date.getMinutes());
-	socket.write(YYYY+"-"+MM+"-"+DD+" "+hh+":"+mm+"\n");
+	var dateToPrint = getDate();
+	socket.write(dateToPrint +"\n");
 	socket.end();
 }).listen(process.argv[2]);
 
@@ -16,4 +11,13 @@ function fillZeros (num) {
 		num = "0" + num;
 	}
 	return num;
+}
+
+function getDate () {
+	var date = new Date();
+	return date.getFullYear() + "-"
+		+ fillZeros(date.getMonth() + 1) + "-"
+		+ fillZeros(date.getDate()) + " "
+		+ fillZeros(date.getHours()) + ":"
+		+ fillZeros(date.getMinutes());
 }
