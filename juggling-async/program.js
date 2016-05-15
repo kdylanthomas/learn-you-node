@@ -1,29 +1,28 @@
+// uses a for loop to call function three times
+
 var http = require('http')
+var concat = require('concat-stream')
 
-var url1 = process.argv[2];
-var url2 = process.argv[3];
-var url3 = process.argv[4];
+var results = [];
+var numComplete = 0;
 
-function returnUrlData (url) {
-	return new Promise(function (resolve, reject) {
-		var fullBuffer = "";
-
-		http.get(url, function (response) {
-			response.on("data", function (data) {
-				fullBuffer += data;
-			});
-			response.on("error", console.error);
-			response.on("end", function () {
-				var fullString = fullBuffer.toString('utf8');
-				console.log(fullString);
-				resolve(fullString);
-			});
-		}).on('error', console.error);
-	});
+function printResults () {
+	for (var i = 0; i < 3; i++) {
+		console.log(results[i]);
+	}
 }
 
-returnUrlData(url1)
-.then(function (fullString) {
-	return returnUrlData(url2)})
-.then(function (fullString) {
-	return returnUrlData(url3)});
+function getData (i) {
+	http.get(process.argv[2 + i], function (response) {
+		response.pipe(concat(function (data) {
+			results[i] = data.toString();
+			numComplete++;
+			if (numComplete === 3) printResults();
+		}));
+		response.on("error", console.error);
+	}).on('error', console.error);
+}
+
+for (var i = 0; i < 3; i++) {
+	getData(i);
+}
